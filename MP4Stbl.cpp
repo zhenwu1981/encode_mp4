@@ -19,7 +19,7 @@ void MP4Stbl::createMP4Stbl(int type)
 
 	if (0 == m_iType)
 	{
-		ullLen = m_stStsd.getSize() + m_stStts.getSize() + m_stCtts.getSize() + m_stStsz.getSize() + m_stStsc.getSize() + m_stStco.getSize() + m_stStss.getSize();
+		ullLen = m_stStsd.getSize() + m_stStts.getSize() + m_stStsz.getSize() + m_stStsc.getSize() + m_stStco.getSize() + m_stStss.getSize() +m_stCtts.getSize();
 	}
 	else
 	{

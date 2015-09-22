@@ -56,7 +56,7 @@ private:
 	uint64	m_uiVideoEndTime;
 	unsigned char*	m_pucVideoBuffer;
 	int				m_iVideoLength;
-	uint64				m_iVideoLastTime;
+	uint64			m_iVideoLastTime;
 	int				m_iVideoDuration;
 	int				m_iVideoFrameIndex;
 	int				m_iVideoChunkIndex;
@@ -67,7 +67,7 @@ private:
 	uint64	m_uiAudioEndTime;
 	unsigned char*	m_pucAudioBuffer;
 	int				m_iAudioLength;
-	uint64				m_iAudioLastTime;
+	uint64			m_iAudioLastTime;
 	int				m_iAudioDuration;
 	int				m_iAudioFrameIndex;
 	int				m_iAudioChunkIndex;

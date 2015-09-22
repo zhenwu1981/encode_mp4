@@ -1,4 +1,3 @@
-
 #include "MP4Stsd.h"
 
 VisualSampleEntry::VisualSampleEntry()
@@ -224,6 +223,20 @@ void AVCConfigurationBox::createAVCConfigurationBox(uint8 ucAVCProfileIndication
 
 	printf("avcC : %d \n", getSize());
 }
+
+/*
+uint8	m_ucConfigurationVersion;
+uint8	m_ucAVCProfileIndication;	//sps[1]
+uint8	m_ucProfileCompatibility;	//sps[2]
+uint8	m_ucAVCLevelIndication;		//sps[3]
+uint8	m_ucLengthSizeMinusOne;
+uint8	m_ucNumOfSequenceParameterSets;
+uint16	m_usSequenceParameterSetLength;
+std::string m_strSPS;
+uint8	m_ucNumOfPictureParameterSets;
+uint16	m_usPictureParameterSetLength;
+std::string m_strPPS;
+*/
 
 void AVCConfigurationBox::writeFile(FILE* fd)
 {

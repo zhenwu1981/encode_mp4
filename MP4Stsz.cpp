@@ -1,16 +1,18 @@
-
 #include "MP4Stsz.h"
 
 
 MP4Stsz::MP4Stsz()
 {
-	m_puiEntrySize = NULL;
+    m_puiEntrySize = NULL;
 }
 
 
 MP4Stsz::~MP4Stsz()
 {
-	SAFE_FREE_BLOCK(m_puiEntrySize);
+    if (NULL != m_puiEntrySize)
+    {
+        free(m_puiEntrySize);
+    }
 }
 
 void MP4Stsz::createMP4Stsz()
@@ -26,14 +28,6 @@ void MP4Stsz::createMP4Stsz()
 
 	printf("stsz : %d \n", getSize());
 }
-
-/*
-unsigned char m_ucVersion;
-unsigned char m_ucFlag[3];
-uint32	m_uiSampleSize;
-uint32	m_uiSampleCount;
-uint32*	m_puiEntrySize;
-*/
 
 void MP4Stsz::writeFile(FILE* fd)
 {

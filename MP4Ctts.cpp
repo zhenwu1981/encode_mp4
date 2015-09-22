@@ -4,13 +4,16 @@
 
 MP4Ctts::MP4Ctts()
 {
-	m_pstOffsetBox = NULL;
+    m_pstOffsetBox = NULL;
 }
 
 
 MP4Ctts::~MP4Ctts()
 {
-	SAFE_FREE_BLOCK(m_pstOffsetBox);
+    if (NULL != m_pstOffsetBox)
+    {
+        free(m_pstOffsetBox);
+    }
 }
 
 void MP4Ctts::createMP4Ctts(unsigned char ucVersion)

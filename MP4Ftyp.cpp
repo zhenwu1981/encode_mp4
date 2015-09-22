@@ -1,4 +1,3 @@
-
 #include "MP4Ftyp.h"
 
 

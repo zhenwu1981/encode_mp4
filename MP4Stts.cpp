@@ -1,16 +1,18 @@
-
 #include "MP4Stts.h"
 
 
 MP4Stts::MP4Stts()
 {
-	m_pstSampleBox = NULL;
+    m_pstSampleBox = NULL;
 }
 
 
 MP4Stts::~MP4Stts()
 {
-	SAFE_FREE_BLOCK(m_pstSampleBox);
+    if (NULL != m_pstSampleBox)
+    {
+        free(m_pstSampleBox);
+    }
 }
 
 void MP4Stts::createMP4Stts(unsigned char ucVersion)
@@ -25,13 +27,6 @@ void MP4Stts::createMP4Stts(unsigned char ucVersion)
 
 	printf("stts : %d \n", getSize());
 }
-
-/*
-unsigned char m_ucVersion;
-unsigned char m_ucFlag[3];
-uint32	m_uiEntryCount;
-TimeToSampleBox* m_pstSampleBox;
-*/
 
 void MP4Stts::writeFile(FILE* fd)
 {

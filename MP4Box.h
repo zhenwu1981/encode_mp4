@@ -1,11 +1,10 @@
 #pragma once
 #include <string>
 #include <stdio.h>
-#include <Winsock2.h>
+#include <winsock2.h>
+#include <stdlib.h>
 
 #include "type.h"
-
-#define SAFE_FREE_BLOCK(x) if(NULL != x) { free(x); }
 
 class MP4Box
 {

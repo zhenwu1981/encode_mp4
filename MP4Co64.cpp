@@ -4,13 +4,16 @@
 
 MP4Co64::MP4Co64()
 {
-	m_puiChunkOffset = NULL;
+    m_puiChunkOffset = NULL;
 }
 
 
 MP4Co64::~MP4Co64()
 {
-	SAFE_FREE_BLOCK(m_puiChunkOffset);
+    if (NULL != m_puiChunkOffset)
+    {
+        free(m_puiChunkOffset);
+    }
 }
 
 void MP4Co64::createMP4Co64()

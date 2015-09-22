@@ -1,16 +1,18 @@
-
 #include "MP4Stss.h"
 
 
 MP4Stss::MP4Stss()
 {
-	m_puiSampleNumber = NULL;
+    m_puiSampleNumber = NULL;
 }
 
 
 MP4Stss::~MP4Stss()
 {
-	SAFE_FREE_BLOCK(m_puiSampleNumber);
+    if (NULL != m_puiSampleNumber)
+    {
+        free(m_puiSampleNumber);
+    }
 }
 
 void MP4Stss::createMP4Stss()
@@ -25,13 +27,6 @@ void MP4Stss::createMP4Stss()
 
 	printf("stss : %d \n", getSize());
 }
-
-/*
-unsigned char m_ucVersion;
-unsigned char m_ucFlag[3];
-uint32	m_uiEntryCount;
-uint32*	m_puiSampleNumber;
-*/
 
 void MP4Stss::writeFile(FILE* fd)
 {

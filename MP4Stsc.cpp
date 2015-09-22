@@ -4,13 +4,16 @@
 
 MP4Stsc::MP4Stsc()
 {
-	m_stChunkBox = NULL;
+    m_stChunkBox = NULL;
 }
 
 
 MP4Stsc::~MP4Stsc()
 {
-	SAFE_FREE_BLOCK(m_stChunkBox);
+    if (NULL != m_stChunkBox)
+    {
+        free(m_stChunkBox);
+    }
 }
 
 void MP4Stsc::createMP4Stsc()
@@ -25,12 +28,6 @@ void MP4Stsc::createMP4Stsc()
 
 	printf("stsc : %d \n", getSize());
 }
-/*
-unsigned char m_ucVersion;
-unsigned char m_ucFlag[3];
-uint32	m_uiEntryCount;
-SampleToChunkBox*	m_stChunkBox;
-*/
 
 void MP4Stsc::writeFile(FILE* fd)
 {

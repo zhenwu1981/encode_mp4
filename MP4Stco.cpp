@@ -4,13 +4,16 @@
 
 MP4Stco::MP4Stco()
 {
-	m_puiChunkOffset = NULL;
+    m_puiChunkOffset = NULL;
 }
 
 
 MP4Stco::~MP4Stco()
 {
-	SAFE_FREE_BLOCK(m_puiChunkOffset);
+    if (NULL != m_puiChunkOffset)
+    {
+        free(m_puiChunkOffset);
+    }
 }
 
 void MP4Stco::createMP4Stco()
@@ -25,13 +28,6 @@ void MP4Stco::createMP4Stco()
 
 	printf("stco : %d \n", getSize());
 }
-
-/*
-unsigned char m_ucVersion;
-unsigned char m_ucFlag[3];
-uint32	m_uiEntryCount;
-uint32*	m_puiChunkOffset;
-*/
 
 void MP4Stco::writeFile(FILE* fd)
 {
