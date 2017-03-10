@@ -60,7 +60,9 @@ private:
 	int				m_iVideoDuration;
 	int				m_iVideoFrameIndex;
 	int				m_iVideoChunkIndex;
-	int				m_iVideoSampleSize;
+    int				m_iVideoSampleSize;
+    int 			m_iVideoTimestamp;
+    int 			m_iVideoCostTimestamp;
 
 	//audio
 	uint64	m_uiAudioStartTime;
@@ -71,6 +73,7 @@ private:
 	int				m_iAudioDuration;
 	int				m_iAudioFrameIndex;
 	int				m_iAudioChunkIndex;
-	int				m_iAudioSampleSize;
+    int				m_iAudioSampleSize;
+    int 			m_iAudioTimestamp;
 };
 

@@ -250,6 +250,7 @@ bool MP4::setAudioConifg()
 	m_iAudioFrameIndex = 0;
 	m_iAudioChunkIndex = 0;
 	m_iAudioSampleSize = 0;
+    m_iAudioTimestamp = 0;
     
     return true;
 }
@@ -343,17 +344,29 @@ bool MP4::setVideoFrameImpl(const char* pacBuffer, int iLength, uint64 uiPTS, ui
 
 		if (m_iVideoLastTime == 0)
 		{
-			m_stMoov.m_stTrak[m_iVideoIndex].m_stMdia.m_stMinf.m_stStbl.m_stStts.setSampleDuration(times*m_ullTimescale / 1000);
+            uint32 tmp = times*m_ullTimescale + m_iVideoTimestamp;
+            uint32 uiDuration = tmp / 1000;
+            m_iVideoTimestamp = tmp % 1000;
+            uint32 tmpCost = costTimes*m_ullTimescale + m_iVideoCostTimestamp;
+            uint32 uiCostDuration = tmpCost / 1000;
+            m_iVideoCostTimestamp = tmpCost % 1000;
+			m_stMoov.m_stTrak[m_iVideoIndex].m_stMdia.m_stMinf.m_stStbl.m_stStts.setSampleDuration(uiDuration);
 //            m_stMoov.m_stTrak[m_iVideoIndex].m_stEdts.m_stElst.m_iMediaTime = times;
-			m_stMoov.m_stTrak[m_iVideoIndex].m_stMdia.m_stMinf.m_stStbl.m_stCtts.setSampleDuration(costTimes*m_ullTimescale / 1000);
+			m_stMoov.m_stTrak[m_iVideoIndex].m_stMdia.m_stMinf.m_stStbl.m_stCtts.setSampleDuration(uiCostDuration);
 			m_iVideoDuration = 0;
 		}
 		else
 		{
-			m_stMoov.m_stTrak[m_iVideoIndex].m_stMdia.m_stMinf.m_stStbl.m_stStts.setSampleDuration((times - m_iVideoLastTime)*m_ullTimescale / 1000);
-			m_stMoov.m_stTrak[m_iVideoIndex].m_stMdia.m_stMinf.m_stStbl.m_stCtts.setSampleDuration(costTimes*m_ullTimescale / 1000);
+            uint32 tmp = (times - m_iVideoLastTime)*m_ullTimescale + m_iVideoTimestamp;
+            uint32 uiDuration = tmp / 1000;
+            m_iVideoTimestamp = tmp % 1000;
+            uint32 tmpCost = costTimes*m_ullTimescale + m_iVideoCostTimestamp;
+            uint32 uiCostDuration = tmpCost / 1000;
+            m_iVideoCostTimestamp = tmpCost % 1000;
+			m_stMoov.m_stTrak[m_iVideoIndex].m_stMdia.m_stMinf.m_stStbl.m_stStts.setSampleDuration(uiDuration);
+			m_stMoov.m_stTrak[m_iVideoIndex].m_stMdia.m_stMinf.m_stStbl.m_stCtts.setSampleDuration(uiCostDuration);
 //            printf("costTimes : %lld , Duration : %lld \n",costTimes,(times - m_iVideoLastTime)*m_ullTimescale / 1000);
-			m_iVideoDuration += (times - m_iVideoLastTime)*m_ullTimescale / 1000;
+			m_iVideoDuration += uiDuration;
 		}
 	}
 	else
@@ -366,10 +379,16 @@ bool MP4::setVideoFrameImpl(const char* pacBuffer, int iLength, uint64 uiPTS, ui
 
 		memcpy(m_pucVideoBuffer + m_iVideoLength, pacBuffer, iLength);
 
-		m_stMoov.m_stTrak[m_iVideoIndex].m_stMdia.m_stMinf.m_stStbl.m_stStts.setSampleDuration((times - m_iVideoLastTime)*m_ullTimescale / 1000);
-		m_stMoov.m_stTrak[m_iVideoIndex].m_stMdia.m_stMinf.m_stStbl.m_stCtts.setSampleDuration(costTimes*m_ullTimescale / 1000);
+        uint32 tmp = (times - m_iVideoLastTime)*m_ullTimescale + m_iVideoTimestamp;
+        uint32 uiDuration = tmp / 1000;
+        m_iVideoTimestamp = tmp % 1000;
+        uint32 tmpCost = costTimes*m_ullTimescale + m_iVideoCostTimestamp;
+        uint32 uiCostDuration = tmpCost / 1000;
+        m_iVideoCostTimestamp = tmpCost % 1000;
+		m_stMoov.m_stTrak[m_iVideoIndex].m_stMdia.m_stMinf.m_stStbl.m_stStts.setSampleDuration(uiDuration);
+		m_stMoov.m_stTrak[m_iVideoIndex].m_stMdia.m_stMinf.m_stStbl.m_stCtts.setSampleDuration(uiCostDuration);
 //        printf("costTimes : %lld , Duration : %lld \n",costTimes,(times - m_iVideoLastTime));
-		m_iVideoDuration += (times - m_iVideoLastTime)*m_ullTimescale / 1000;
+		m_iVideoDuration += uiDuration;
 	}
 
 	m_iVideoSampleSize += 1;
@@ -433,15 +452,22 @@ bool MP4::setAudioFrameImple(const char* pacBuffer, int iLength, uint64 uiPTS)
 
 		if (m_iAudioLastTime == 0)
 		{
-			m_stMoov.m_stTrak[m_iAudioIndex].m_stMdia.m_stMinf.m_stStbl.m_stStts.setSampleDuration(times*m_iSample / 1000);
+            
+            uint32 tmp = times*m_iSample + m_iAudioTimestamp;
+            uint32 uiDuration = tmp / 1000;
+            m_iAudioTimestamp = tmp % 1000;
+			m_stMoov.m_stTrak[m_iAudioIndex].m_stMdia.m_stMinf.m_stStbl.m_stStts.setSampleDuration(uiDuration);
 //            m_stMoov.m_stTrak[m_iVideoIndex].m_stEdts.m_stElst.m_iMediaTime = times;
 			m_iAudioDuration = 0;
 		}
 		else
 		{
-			m_stMoov.m_stTrak[m_iAudioIndex].m_stMdia.m_stMinf.m_stStbl.m_stStts.setSampleDuration((times - m_iAudioLastTime)*m_iSample / 1000);
+            uint32 tmp = (times - m_iAudioLastTime)*m_iSample + m_iAudioTimestamp;
+            uint32 uiDuration = tmp / 1000;
+            m_iAudioTimestamp = tmp % 1000;
+			m_stMoov.m_stTrak[m_iAudioIndex].m_stMdia.m_stMinf.m_stStbl.m_stStts.setSampleDuration(uiDuration);
 //            printf("Duration : %lld \n",(times - m_iAudioLastTime));
-			m_iAudioDuration += (times - m_iAudioLastTime)*m_iSample / 1000;
+			m_iAudioDuration += uiDuration;
 		}
 	}
 	else
@@ -454,9 +480,12 @@ bool MP4::setAudioFrameImple(const char* pacBuffer, int iLength, uint64 uiPTS)
 
 		memcpy(m_pucAudioBuffer + m_iAudioLength, pacBuffer, iLength);
 
-		m_stMoov.m_stTrak[m_iAudioIndex].m_stMdia.m_stMinf.m_stStbl.m_stStts.setSampleDuration((times - m_iAudioLastTime)*m_iSample / 1000);
+        uint32 tmp = (times - m_iAudioLastTime)*m_iSample + m_iAudioTimestamp;
+        uint32 uiDuration = tmp / 1000;
+        m_iAudioTimestamp = tmp % 1000;
+		m_stMoov.m_stTrak[m_iAudioIndex].m_stMdia.m_stMinf.m_stStbl.m_stStts.setSampleDuration(uiDuration);
 //        printf("Duration : %lld \n",(times - m_iAudioLastTime));
-		m_iAudioDuration += (times - m_iAudioLastTime)*m_iSample / 1000;
+		m_iAudioDuration += uiDuration;
 	}
 
 	m_iAudioSampleSize += 1;
