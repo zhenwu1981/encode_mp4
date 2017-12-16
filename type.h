@@ -10,7 +10,13 @@
 #define MAX		100
 
 #include <sys/timeb.h>
+#include <arpa/inet.h>
+#include <string.h>
 
 uint64 MP4GetAbsTimestamp();
+
+#if __linux__
+unsigned long long htonll(unsigned long long host);
+#endif
 
 #endif

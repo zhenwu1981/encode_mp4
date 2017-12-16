@@ -1,7 +1,6 @@
 #pragma once
 #include <string>
 #include <stdio.h>
-#include <winsock2.h>
 #include <stdlib.h>
 
 #include "type.h"

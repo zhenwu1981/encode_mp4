@@ -12,3 +12,18 @@ uint64 MP4GetAbsTimestamp() {
     
     return 0;
 }
+
+#if __linux__
+unsigned long long htonll(unsigned long long host)
+{
+    unsigned long temp_low, temp_high;
+    temp_low = htonl((long)host);
+    temp_high = htonl((long)(host >> 32));
+
+    host &= 0;
+    host |= temp_low;
+    host <<= 32;
+    host |= temp_high;
+    return host;
+}
+#endif

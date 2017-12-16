@@ -12,16 +12,18 @@ public:
 	MP4();
 	~MP4();
 
-	bool open(char* pcPath, int iWidth, int iHeight, int iChannels, int iSample, int iBitRate, int iBitsPerSample);
+	bool open(const char* pcPath);
 	void close();
 
-	bool setVideoConfig(const char* pucSPS , int iSPSLength , const char* pucPPS , int iPPSLength);
-	bool setAudioConifg();
+	bool setVideoConfig(int iWidth, int iHeight,const char* pucSPS, int iSPSLength, const char* pucPPS, int iPPSLength);
+	bool setAudioConifg(int iChannels, int iSample, int iBitRate, int iBitsPerSample);
+
+	bool isVideoConfig();
+	bool isAudioConfig();
 
 	bool setVideoFrame(const char* pacBuffer, int iLength, uint64 uiPTS, uint64 uiDTS , int iVideoFlag);	//1 ±íÊ¾IÖ¡
 	bool setAudioFrame(const char* pacBuffer, int iLength, uint64 uiPTS);
 
-private:
 	bool setVideoFrameImpl(const char* pacBuffer, int iLength, uint64 uiPTS, uint64 uiDTS, int iVideoFlag);
 	bool setAudioFrameImple(const char* pacBuffer, int iLength, uint64 uiPTS);
 
@@ -60,9 +62,9 @@ private:
 	int				m_iVideoDuration;
 	int				m_iVideoFrameIndex;
 	int				m_iVideoChunkIndex;
-    int				m_iVideoSampleSize;
-    int 			m_iVideoTimestamp;
-    int 			m_iVideoCostTimestamp;
+	int				m_iVideoSampleSize;
+	int 			m_iVideoTimestamp;
+	int 			m_iVideoCostTimestamp;
 
 	//audio
 	uint64	m_uiAudioStartTime;
@@ -73,7 +75,7 @@ private:
 	int				m_iAudioDuration;
 	int				m_iAudioFrameIndex;
 	int				m_iAudioChunkIndex;
-    int				m_iAudioSampleSize;
-    int 			m_iAudioTimestamp;
+	int				m_iAudioSampleSize;
+	int 			m_iAudioTimetamp;
 };
 

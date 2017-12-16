@@ -18,13 +18,26 @@ void MP4Elst::createMP4Elst(unsigned int uiTotalTime)
 
 	m_iEntryCount = 1;
 
-	m_iTotalTime = uiTotalTime;
-	m_iMediaTime = 0;
-	m_sMediaRateInteger = 1;
-	m_sMediaRateFraction = 0;
-
 	setSize(20);
 	setType("elst");
+}
+
+void MP4Elst::setTotalDuration(uint32 uiDuration)
+{
+	m_stElst[m_iEntryCount-1].m_iTotalTime = uiDuration;
+	m_stElst[m_iEntryCount-1].m_iMediaTime = 0;
+	m_stElst[m_iEntryCount-1].m_sMediaRateInteger = 1;
+	m_stElst[m_iEntryCount-1].m_sMediaRateFraction = 0;
+}
+
+void MP4Elst::setSampleDuration(uint32 uiDuration)
+{
+	m_stElst[m_iEntryCount-1].m_iTotalTime = uiDuration;
+	m_stElst[m_iEntryCount-1].m_iMediaTime = 0xFFFFFFFF;
+	m_stElst[m_iEntryCount-1].m_sMediaRateInteger = 1;
+	m_stElst[m_iEntryCount-1].m_sMediaRateFraction = 0;
+	m_iEntryCount ++;
+    setSize(32);
 }
 
 void MP4Elst::writeFile(FILE* fd)
@@ -37,15 +50,18 @@ void MP4Elst::writeFile(FILE* fd)
 	fwrite(m_ucFlag, 3, 1, fd);
 	iTemp = htonl(m_iEntryCount);
 	fwrite(&iTemp, 4, 1, fd);
-	iTemp = htonl(m_iTotalTime);
-	fwrite(&iTemp, 4, 1, fd);
-	iTemp = htonl(m_iMediaTime);
-	fwrite(&iTemp, 4, 1, fd);
+	for (int i = 0; i < m_iEntryCount; ++i)
+	{
+		iTemp = htonl(m_stElst[i].m_iTotalTime);
+		fwrite(&iTemp, 4, 1, fd);
+		iTemp = htonl(m_stElst[i].m_iMediaTime);
+		fwrite(&iTemp, 4, 1, fd);
 
-	sTemp = htons(m_sMediaRateInteger);
-	fwrite(&sTemp, 2, 1, fd);
-	sTemp = htons(m_sMediaRateFraction);
-	fwrite(&sTemp, 2, 1, fd);
+		sTemp = htons(m_stElst[i].m_sMediaRateInteger);
+		fwrite(&sTemp, 2, 1, fd);
+		sTemp = htons(m_stElst[i].m_sMediaRateFraction);
+		fwrite(&sTemp, 2, 1, fd);
+	}
 }
 
 MP4Edts::MP4Edts()
